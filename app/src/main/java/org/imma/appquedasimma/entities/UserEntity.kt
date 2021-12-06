@@ -1,15 +1,16 @@
 package org.imma.appquedasimma.entities
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 
 @Entity(tableName = "users")
-class UserEntity {
+class UserEntity(
 
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-    // Room uses the field names as the column names in the database. If you want a column to have a different name, add the @ColumnInfo annotation to a field
+    var id: Int = 0,
+
     @ColumnInfo(name = "name_column")
     var name: String? = ""
-}
+)
