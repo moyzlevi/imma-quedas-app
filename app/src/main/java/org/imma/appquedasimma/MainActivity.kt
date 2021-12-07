@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioButton
 import androidx.room.Room
 import org.imma.appquedasimma.dao.MainDatabase
 import org.imma.appquedasimma.entities.UserEntity
@@ -13,7 +14,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var continuarButton: Button
     private lateinit var nomeEditText: EditText
-    private lateinit var database:MainDatabase
+    private lateinit var database: MainDatabase
+    private lateinit var alturaEditText: EditText
+    private lateinit var editTextNumberIdade: EditText
+    private lateinit var masculinoRadioButton: RadioButton
+    private lateinit var femininoRadioButton: RadioButton
+    private lateinit var buttonContinuarForms: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,24 +28,51 @@ class MainActivity : AppCompatActivity() {
 
         continuarButton = findViewById(R.id.buttonContinuar)
         nomeEditText = findViewById(R.id.editTextNome)
-        database = Room.databaseBuilder(applicationContext,MainDatabase::class.java,"SQLITE_DATABASE")
+
+
+        database = Room.databaseBuilder(applicationContext, MainDatabase::class.java, "SQLITE_DATABASE")
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration().build()
 
-        var nomeInput: String
+        var tempUserEntity: UserEntity = UserEntity()
         continuarButton.setOnClickListener {
-            Log.i("Main","Clicou no botao continuar")
-            nomeInput = nomeEditText.text.toString()
+            Log.i("Main", "Clicou no botao continuar")
+            tempUserEntity.name = nomeEditText.text.toString()
 
-            if(nomeInput != ""){
-                database.roomDao().insertAll(arrayListOf((UserEntity(0,nomeInput))))
-                Log.i("Main","Retirado do banco: "+ database.roomDao().getAllFromDb().get(0).name.toString())
+            if (tempUserEntity.name != "") {
+                setContentView(R.layout.forms_main)
+
             }
-
         }
+        alturaEditText = findViewById(R.id.editTextNumberAltura)
+        editTextNumberIdade = findViewById(R.id.editTextNumberIdade)
+        masculinoRadioButton = findViewById(R.id.radioButtonMasculino)
+        femininoRadioButton = findViewById(R.id.radioButtonFeminino)
+        buttonContinuarForms = findViewById(R.id.buttonContinuarForms)
+        buttonContinuarForms.setOnClickListener {
+            Log.i("Forms", "Clicou no botao continuar forms")
+            if (alturaEditText.text.toString() != "" && editTextNumberIdade.text.toString() != "" && (checkMasculinoRadioGroup() || checkFemininoRadioGroup())) {
+                tempUserEntity.altura = alturaEditText.text.toString().toInt()
+                tempUserEntity.idade = editTextNumberIdade.text.toString().toInt()
+                if(checkMasculinoRadioGroup()){
+                    tempUserEntity.sexo = 'M'
+                }else{
+                    tempUserEntity.sexo = 'F'
+                }
+            }
+        database.roomDao().insertAll(arrayListOf(tempUserEntity))
 
-
-
+        Log.i("Forms", "Salvo no banco "+tempUserEntity)
+        Log.i("Forms", "Retirado do banco "+database.roomDao().getAllFromDb().get(0))
+        }
     }
 
+    private fun checkMasculinoRadioGroup(): Boolean {
+        return masculinoRadioButton.isChecked && !femininoRadioButton.isChecked
+    }
+
+    private fun checkFemininoRadioGroup(): Boolean {
+        return !masculinoRadioButton.isChecked && femininoRadioButton.isChecked
+    }
 }
+
