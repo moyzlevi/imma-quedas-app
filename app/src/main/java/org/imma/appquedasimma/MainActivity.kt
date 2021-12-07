@@ -69,5 +69,5 @@ class MainActivity : AppCompatActivity() {
 //    private fun checkFemininoRadioGroup(): Boolean {
 //        return !masculinoRadioButton.isChecked && femininoRadioButton.isChecked
 //    }
-}
+}}
 
