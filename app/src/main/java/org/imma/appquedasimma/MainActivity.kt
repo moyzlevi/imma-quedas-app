@@ -1,73 +1,56 @@
 package org.imma.appquedasimma
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.room.Room
 import org.imma.appquedasimma.dao.MainDatabase
-import org.imma.appquedasimma.entities.UserEntity
+import org.imma.appquedasimma.databinding.ActivityNavigationBinding
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var continuarButton: Button
-    private lateinit var nomeEditText: EditText
+    companion object {
+        val TAG = "MainActivity"
+    }
+    private lateinit var binding: ActivityNavigationBinding
     private lateinit var database: MainDatabase
-//    private var alturaEditText: EditText = findViewById(R.id.editTextNumberAltura)
-//    private var editTextNumberIdade: EditText = findViewById(R.id.editTextNumberIdade)
-//    private var masculinoRadioButton:RadioButton = findViewById(R.id.radioButtonMasculino)
-//    private var femininoRadioButton: RadioButton = findViewById(R.id.radioButtonFeminino)
-//    private var buttonContinuarForms: Button = findViewById(R.id.buttonContinuarForms)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        continuarButton = findViewById(R.id.buttonContinuar)
-        nomeEditText = findViewById(R.id.editTextNome)
-
         database = Room.databaseBuilder(applicationContext, MainDatabase::class.java, "SQLITE_DATABASE")
             .allowMainThreadQueries()
             .fallbackToDestructiveMigration().build()
+        val users = database.roomDao().getAllFromDb()
+        Log.i(TAG, "${users}")
 
-        var tempUserEntity: UserEntity = UserEntity()
-        continuarButton.setOnClickListener {
-            Log.i("Main", "Clicou no botao continuar")
-            tempUserEntity.name = nomeEditText.text.toString()
-
-            if (tempUserEntity.name != "") {
-                setContentView(R.layout.forms_main)
-
-            }
+        if (users.isEmpty()) {
+            goToFirstPage()
         }
+        super.onCreate(savedInstanceState)
 
-//        buttonContinuarForms.setOnClickListener {
-//            Log.i("Forms", "Clicou no botao continuar forms")
-//            if (alturaEditText.text.toString() != "" && editTextNumberIdade.text.toString() != "" && (checkMasculinoRadioGroup() || checkFemininoRadioGroup())) {
-//                tempUserEntity.altura = alturaEditText.text.toString().toInt()
-//                tempUserEntity.idade = editTextNumberIdade.text.toString().toInt()
-//                if(checkMasculinoRadioGroup()){
-//                    tempUserEntity.sexo = 'M'
-//                }else{
-//                    tempUserEntity.sexo = 'F'
-//                }
-//            }
-//        database.roomDao().insertAll(arrayListOf(tempUserEntity))
-//
-//        Log.i("Forms", "Salvo no banco "+tempUserEntity)
-//        Log.i("Forms", "Retirado do banco "+database.roomDao().getAllFromDb().get(0))
-//        }
-//    }
-//
-//    private fun checkMasculinoRadioGroup(): Boolean {
-//        return masculinoRadioButton.isChecked && !femininoRadioButton.isChecked
-//    }
-//
-//    private fun checkFemininoRadioGroup(): Boolean {
-//        return !masculinoRadioButton.isChecked && femininoRadioButton.isChecked
-//    }
-}}
+        binding = ActivityNavigationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        val navView: BottomNavigationView = binding.navView
+
+        val navController = findNavController(R.id.nav_host_fragment_activity_navigation)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+            )
+        )
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+    }
+
+    private fun goToFirstPage() {
+        val intent = Intent(this, FirstPage::class.java)
+        startActivity(intent)
+    }
+}

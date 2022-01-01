@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">App Quedas Imma</string>
+    <string name="app_name">App Quedas</string>
     <string name="termo_de_aceitacao">Eu declaro para os devidos fins que as informações aqui declaradas são verdadeiras e que autorizo o uso, armazenamento e visualização das informações aqui declaradas para o correto desempenho do aplicativo no qual me inscrevo. Estou ciente de que cabe à equipe de desenvolvedores e idealizadores do projeto o registro de meus dados, estando protegido pela Lei Geral de Proteção de Dados, bem como jurisdição pertinente. Declaro ainda estar ciente de que como usuário do aplicativo, as informações aqui coletadas servirão apenas como elemento de estudos científicos, além de ser uma ferramenta para identificação de quedas e desequilíbrios. Por fim, tenho ciência de que meus dados são de minha responsabilidade, e que me comprometo a não realizar a violação desses termos de uso, visando o bom-uso da aplicação desenvolvida.</string>
+    <string name="title_activity_navigation">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
