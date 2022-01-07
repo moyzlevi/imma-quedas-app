@@ -16,6 +16,6 @@ data class EmergencyContactEntity(
     var name: String? = ""
 
     @ColumnInfo(name = "phoneNumber_column")
-    var phoneNumber: Long = 0
+    var phoneNumber: String? = ""
 
 }
